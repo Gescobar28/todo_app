@@ -5,11 +5,12 @@ export default function ToDoApp() {
   const [user, setUser] = useState("");
   const [tasks, setTasks] = useState([]);
   const [createTask, setCreateTask] = useState(true);
-
   const [taskToAdd, setTaskToAdd] = useState({
     task: "",
     userId: "",
   });
+
+  const pendingTasks = tasks.filter((el) => el.completed === false);
 
   async function loadUserFromLocalStorage() {
     setUser(JSON.parse(window.localStorage.getItem("user")));
@@ -111,9 +112,13 @@ export default function ToDoApp() {
               </svg>
             </button>
           </div>
-          <h5 className="text-end my-5 me-5">
-            {user ? `Welcome, ${user.username.toUpperCase()}` : ""}
-          </h5>
+          <div>
+            <h5 className="text-end mt-5 me-5">
+              {user ? `Welcome, ${user.username.toUpperCase()}` : ""}
+            </h5>
+            <p  className="text-end me-5">{tasks[0] ? pendingTasks[0] ? `You have ${pendingTasks.length} task(s) to do!` : 'You have no tasks to do, GOOD JOB!' : ""}</p>
+          </div>
+
           <h1 className="text-center">To-Do App</h1>
           <form className="d-flex justify-content-center my-5">
             <input
@@ -222,7 +227,10 @@ export default function ToDoApp() {
             </div>
           </div>
           <div className="d-flex justify-content-center mb-5">
-            <button className="btn btn-outline-danger " onClick={(e) => handleDeleteAllTask(e)}>
+            <button
+              className="btn btn-outline-danger "
+              onClick={(e) => handleDeleteAllTask(e)}
+            >
               <span className="text-black fw-bold me-2">Delete All</span>
               <svg
                 width="24"

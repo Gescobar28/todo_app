@@ -20,10 +20,6 @@ export default function Login() {
       const userLocal = { username, id };
       setTimeout(linkToApp, 500);
       window.localStorage.setItem("user", JSON.stringify(userLocal));
-      setUser({
-        user: "",
-        password: "",
-      });
     } else {
       alert("Username is not available");
     }
@@ -101,7 +97,7 @@ export default function Login() {
             type="submit"
             className="btn btn-primary"
             onClick={(e) => handleSubmit(e)}
-            disabled={user.username.length <= 6 || user.password.length <= 8}
+            disabled={user ? user.username.length <= 6 || user.password.length <= 8 : ""}
           >
             {logged ? "Sign in" : "Sign up"}
           </button>
