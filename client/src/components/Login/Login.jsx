@@ -20,6 +20,10 @@ export default function Login() {
       const userLocal = { username, id };
       setTimeout(linkToApp, 500);
       window.localStorage.setItem("user", JSON.stringify(userLocal));
+      setUser({
+        user: "",
+        password: "",
+      });
     } else {
       alert("Username is not available");
     }
@@ -48,13 +52,17 @@ export default function Login() {
   }
 
   async function handleSubmit(e) {
+    // setUser({
+    //   ...user,
+    //   password: md5(user.password),
+    // });
     e.preventDefault();
-    !logged ? await newUser() : await getUser();
+      !logged ? await newUser() : await getUser();
   }
 
   return (
     <div className="mt-5">
-      <form className="my-5 container border border-dark rounded w-25">
+      <form className="my-5 container border rounded w-25 shadow">
         <h1 className="mt-5 text-center">{logged ? "Login" : "Sign up"}</h1>
         <div className="mt-5">
           <label className="fs-5">Username:</label>
@@ -76,11 +84,11 @@ export default function Login() {
             onChange={(e) => handleChange(e)}
           ></input>
         </div>
-        <small className="">
+        <small className="text-secondary my-5">
           {!logged ? "I already have an account" : "New to ToDo App?"}
         </small>
         <button
-          className="btn text-decoration-underline"
+          className="btn text-decoration-underline text-primary py-0"
           onClick={(e) => {
             setLogged(!logged);
             e.preventDefault();
