@@ -1,5 +1,13 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import {
+  addTask,
+  completeTask,
+  deleteAllTask,
+  deleteTask,
+  getTasks,
+  updateTaskName,
+} from "../../controllers/todoappControllers";
 
 export default function ToDoApp() {
   const [user, setUser] = useState("");
@@ -16,24 +24,14 @@ export default function ToDoApp() {
     setUser(JSON.parse(window.localStorage.getItem("user")));
   }
 
-  async function getTasks() {
-    const user = JSON.parse(window.localStorage.getItem("user"));
-    const json = user
-      ? await axios.get(`http://localhost:3001/getTasks/${user.id}`)
-      : "";
-    setTasks(json.data.tasks);
-  }
-
   useEffect(() => {
     loadUserFromLocalStorage();
-    getTasks();
+    getTasks(axios, setTasks);
   }, []);
 
   async function handleAddTask(e) {
     e.preventDefault();
-    const json = await axios.post("http://localhost:3001/newTask", taskToAdd);
-    setTaskToAdd({ task: "", userId: user ? user.id : null });
-    setTasks([...tasks, json.data.newTask]);
+    addTask(axios, taskToAdd, setTaskToAdd, setTasks, tasks);
   }
 
   function handleChange(e) {
@@ -64,33 +62,29 @@ export default function ToDoApp() {
 
   async function handleUpdateTaskName(e) {
     e.preventDefault();
-    const json = await axios.put(
-      `http://localhost:3001/updateTaskName/${taskToAdd.id}`,
-      taskToAdd
+    updateTaskName(
+      axios,
+      taskToAdd,
+      setTaskToAdd,
+      setTasks,
+      setCreateTask,
+      user
     );
-    setTaskToAdd({ task: "", userId: user ? user.id : null });
-    setCreateTask(true);
-    setTasks(json.data.tasks);
   }
 
   async function handleCompleteTask(id, e) {
     e.preventDefault();
-    const json = await axios.put(`http://localhost:3001/updateTask/${id}`);
-    setTasks(json.data.tasks);
+    completeTask(axios, id, setTasks);
   }
 
   async function handleDeleteTask(id, e) {
     e.preventDefault();
-    const json = await axios.delete(`http://localhost:3001/deleteTask/${id}`);
-    setTasks(json.data.tasks);
+    deleteTask(axios, id, setTasks);
   }
 
   async function handleDeleteAllTask(e) {
     e.preventDefault();
-    const json = await axios.delete(
-      `http://localhost:3001/deleteAllTask/${user.id}`
-    );
-    setTasks(json.data.tasks);
+    deleteAllTask(axios, user, setTasks);
   }
 
   return (
@@ -116,7 +110,13 @@ export default function ToDoApp() {
             <h5 className="text-end mt-5 me-5">
               {user ? `Welcome, ${user.username.toUpperCase()}` : ""}
             </h5>
-            <p  className="text-end me-5">{tasks[0] ? pendingTasks[0] ? `You have ${pendingTasks.length} task(s) to do!` : 'You have no tasks to do, GOOD JOB!' : ""}</p>
+            <p className="text-end me-5 fw-bold">
+              {tasks[0]
+                ? pendingTasks[0]
+                  ? `You have ${pendingTasks.length} task(s) to do!`
+                  : "You have no tasks to do, GOOD JOB!"
+                : ""}
+            </p>
           </div>
 
           <h1 className="text-center">To-Do App</h1>
@@ -226,7 +226,11 @@ export default function ToDoApp() {
               )}
             </div>
           </div>
-          <div className="d-flex justify-content-center mb-5">
+          <div
+            className={` ${
+              tasks[0] ? "d-flex" : "d-none"
+            } justify-content-center mb-5`}
+          >
             <button
               className="btn btn-outline-danger "
               onClick={(e) => handleDeleteAllTask(e)}

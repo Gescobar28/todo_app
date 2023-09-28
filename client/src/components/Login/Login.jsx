@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import { getUser, newUser } from "../../controllers/loginControllers";
 
 export default function Login() {
   const [logged, setLogged] = useState(true);
@@ -7,38 +8,6 @@ export default function Login() {
     username: "",
     password: "",
   });
-
-  function linkToApp() {
-    window.location.href = "http://localhost:3000/todoapp";
-  }
-
-  async function newUser() {
-    const json = await axios.post("http://localhost:3001/newUser", user);
-    if (json.data.created) {
-      const username = json.data.newUser.username;
-      const id = json.data.newUser.id;
-      const userLocal = { username, id };
-      setTimeout(linkToApp, 500);
-      window.localStorage.setItem("user", JSON.stringify(userLocal));
-    } else {
-      alert("Username is not available");
-    }
-  }
-
-  async function getUser() {
-    const json = await axios.post("http://localhost:3001/getUser", user);
-    if (json.data.error) {
-      alert(
-        "Some of the data does not match, verify the data entered or create an account to start using the application"
-      );
-    } else {
-      const username = json.data.username;
-      const id = json.data.id;
-      const userLocal = { username, id };
-      setTimeout(linkToApp, 500);
-      window.localStorage.setItem("user", JSON.stringify(userLocal));
-    }
-  }
 
   function handleChange(e) {
     setUser({
@@ -48,12 +17,8 @@ export default function Login() {
   }
 
   async function handleSubmit(e) {
-    // setUser({
-    //   ...user,
-    //   password: md5(user.password),
-    // });
     e.preventDefault();
-      !logged ? await newUser() : await getUser();
+    !logged ? await newUser(axios, user) : await getUser(axios, user);
   }
 
   return (
@@ -97,7 +62,9 @@ export default function Login() {
             type="submit"
             className="btn btn-primary"
             onClick={(e) => handleSubmit(e)}
-            disabled={user ? user.username.length <= 6 || user.password.length <= 8 : ""}
+            disabled={
+              user ? user.username.length <= 6 || user.password.length <= 8 : ""
+            }
           >
             {logged ? "Sign in" : "Sign up"}
           </button>
