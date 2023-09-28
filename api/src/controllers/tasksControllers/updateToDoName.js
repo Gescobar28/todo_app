@@ -7,7 +7,6 @@ const dataFilePath = path.join(process.cwd(), "/src/utils/allTasks.json");
 export const updateToDoName = async (req, res) => {
   const { id } = req.params;
   const { task } = req.body;
-  console.log(id);
 
   try {
     const taskToChangeName = tasks.find((el) => el.id == id);

@@ -9,7 +9,6 @@ const dataFilePath = path.join(process.cwd(), "/src/utils/allTasks.json");
 
 export const updateToDo = async (req, res) => {
   const { id } = req.params;
-  console.log(id);
 
   try {
     const taskToChangeStatus = tasks.find((el) => el.id == id);

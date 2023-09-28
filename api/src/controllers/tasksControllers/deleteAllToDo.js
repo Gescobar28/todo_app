@@ -9,7 +9,6 @@ export const deleteAllToDo = async (req, res) => {
 
   try {
     const newTasks = tasks.filter((el) => el.userId != userId);
-    console.log(newTasks);
 
     const updateTasks = JSON.stringify(newTasks);
 

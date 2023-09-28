@@ -8,7 +8,6 @@ const dataFilePath = path.join(process.cwd(), "/src/utils/allTasks.json");
 
 export const deleteToDo = async (req, res) => {
   const { id } = req.params;
-  console.log(id);
 
   try {
     const taskToDelete = tasks.find((el) => el.id == id);
