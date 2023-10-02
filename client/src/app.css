@@ -1,0 +1,49 @@
+:root{
+    background-color: rgb(237, 240, 237);
+    color: rgb(253, 253, 253);
+    padding: 0px;
+}
+
+.bg-color-form{
+    background-color: rgb(237, 240, 237);
+}
+
+.width-todo-device{
+    width: 100%;
+}
+
+.width-login-device{
+    width: 90%;
+}
+
+.validators{
+    font-size: 0.8rem;
+    font-style: italic;
+}
+
+
+
+@media (min-width: 576px) {
+    .width-login-device{
+        width: 50%;
+    }
+    .width-todo-device{
+        width: 100%;
+    }
+ }
+@media (min-width: 768px) {
+    .width-login-device{
+        width: 30%;
+    }
+    .width-todo-device{
+        width: 100%;
+    }
+ }
+@media (min-width: 992px) {
+    .width-login-device{
+        width: 25%;
+    }
+    .width-todo-device{
+        width: 80%;
+    }
+ }
